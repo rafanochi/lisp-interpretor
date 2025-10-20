@@ -1,1 +1,1 @@
-# lisp-interpretor
+# lisp-interpreter

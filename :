@@ -22,13 +22,6 @@ readExpr input = case parse (spaces >> symbol) "lisp" input of
 spaces :: Parser ()
 spaces = skipMany1 space
 
-parseString :: Parser LispVal
-parseString = do
-  char '"'
-  x <- many (noneOf "\"")
-  char '"'
-  return $ String x
-
 main :: IO ()
 main = do
   (expr : _) <- getArgs

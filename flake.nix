@@ -7,13 +7,14 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
-      hpkgs = pkgs.haskell.packages."ghc912";
+      hpkgs = pkgs.haskell.packages."ghc98";
     in
     {
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
-          hpkgs.ghc
-          hpkgs.haskell-language-server
+        buildInputs = with hpkgs;[
+          ghc
+          haskell-language-server
+          cabal-install
         ];
 
         shellHook = ''

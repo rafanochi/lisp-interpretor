@@ -5,11 +5,11 @@ import Text.ParserCombinators.Parsec hiding (spaces)
 
 data LispVal
   = Atom String
-  | List [LispVal]
-  | DottedList [LispVal] LispVal
-  | Number Integer
-  | String String
-  | Bool Bool
+  | LList [LispVal]
+  | LDottedList [LispVal] LispVal
+  | LNumber Integer
+  | LString String
+  | LBool Bool
 
 symbol :: Parser Char
 symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
@@ -27,7 +27,7 @@ parseString = do
   char '"'
   x <- many (noneOf "\"")
   char '"'
-  return $ String x
+  return $ LString x
 
 main :: IO ()
 main = do

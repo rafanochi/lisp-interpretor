@@ -24,9 +24,9 @@ spaces = skipMany1 space
 
 parseString :: Parser LispVal
 parseString = do
-  char '"'
+  _ <- char '"'
   x <- many (noneOf "\"")
-  char '"'
+  _ <- char '"'
   return $ LString x
 
 main :: IO ()

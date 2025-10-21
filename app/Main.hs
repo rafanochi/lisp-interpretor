@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Arrow (Arrow (first))
+import Control.Monad (liftM)
 import System.Environment
 import Text.ParserCombinators.Parsec hiding (spaces)
 
@@ -39,6 +39,9 @@ parseAtom = do
     "#t" -> LBool True
     "#f" -> LBool False
     _ -> Atom atom
+
+parseNumber :: Parser LispVal
+parseNumber = LNumber . read <$> many1 digit
 
 main :: IO ()
 main = do

@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Arrow (Arrow (first))
 import System.Environment
 import Text.ParserCombinators.Parsec hiding (spaces)
 
@@ -28,6 +29,16 @@ parseString = do
   x <- many (noneOf "\"")
   _ <- char '"'
   return $ LString x
+
+parseAtom :: Parser LispVal
+parseAtom = do
+  first <- letter <|> symbol
+  rest <- many (letter <|> digit <|> symbol)
+  let atom = first : rest
+  return $ case atom of
+    "#t" -> LBool True
+    "#f" -> LBool False
+    _ -> Atom atom
 
 main :: IO ()
 main = do

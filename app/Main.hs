@@ -18,10 +18,15 @@ symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
 spaces :: Parser ()
 spaces = skipMany1 space
 
+charWithEsc :: Parser Char
+charWithEsc = do
+  _ <- char '\\'
+  oneOf "\""
+
 parseString :: Parser LispVal
 parseString = do
   _ <- char '"'
-  x <- many (noneOf "\"" <|> (char '\\' >> char '\"'))
+  x <- many (charWithEsc <|> noneOf "\"")
   _ <- char '"'
   return $ LString x
 
@@ -39,7 +44,7 @@ parseNumber :: Parser LispVal
 parseNumber = many1 digit >>= \x -> return $ (LNumber . read) x
 
 parseExpr :: Parser LispVal
-parseExpr = parseAtom <|> parseString <|> parseNumber
+parseExpr = parseString <|> parseNumber <|> parseAtom
 
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
@@ -49,4 +54,9 @@ readExpr input = case parse parseExpr "lisp" input of
 main :: IO ()
 main = do
   (expr : _) <- getArgs
-  putStrLn (readExpr expr)
+  case parse parseExpr "lisp" expr of
+    Right (LString s) -> do
+      putStrLn ("Parsed string: " ++ s) -- prints actual characters
+      putStrLn ("ASCII codes: " ++ show (map fromEnum s))
+      putStrLn ("Parsed String length: " ++ show (length s))
+    other -> print other

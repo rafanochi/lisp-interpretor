@@ -57,6 +57,6 @@ main = do
   case parse parseExpr "lisp" expr of
     Right (LString s) -> do
       putStrLn ("Parsed string: " ++ s) -- prints actual characters
-      putStrLn ("ASCII codes: " ++ show (map fromEnum s))
+      putStrLn ("Char list: " ++ show (map (:[]) s))
       putStrLn ("Parsed String length: " ++ show (length s))
     other -> print other

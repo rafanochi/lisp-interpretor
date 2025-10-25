@@ -21,7 +21,13 @@ spaces = skipMany1 space
 charWithEsc :: Parser Char
 charWithEsc = do
   _ <- char '\\'
-  oneOf "\""
+  y <- oneOf "\"nrt\\"
+  case y of
+    'n' -> return '\n'
+    'r' -> return '\r'
+    't' -> return '\t'
+    '\\' -> return '\\'
+    _ -> return '\"'
 
 parseString :: Parser LispVal
 parseString = do
@@ -57,6 +63,6 @@ main = do
   case parse parseExpr "lisp" expr of
     Right (LString s) -> do
       putStrLn ("Parsed string: " ++ s) -- prints actual characters
-      putStrLn ("Char list: " ++ show (map (:[]) s))
+      putStrLn ("Char list: " ++ show (map (: []) s))
       putStrLn ("Parsed String length: " ++ show (length s))
     other -> print other
